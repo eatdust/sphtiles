@@ -283,9 +283,9 @@ if (shuttle_pos.lat() < 0.0)
 }
 
 
-print("lon= lat= ",shuttle_pos.lon()," ",shuttle_pos.lat());
-print("horizon= geohorizon= distorted_geohorizon= ",horizon/1000.0," ",geohorizon/1000.0," "
-      ,distorted_geohorizon/1000.0);
+#print("lon= lat= ",shuttle_pos.lon()," ",shuttle_pos.lat());
+#print("horizon= geohorizon= distorted_geohorizon= ",horizon/1000.0," ",geohorizon/1000.0," "
+#      ,distorted_geohorizon/1000.0);
 #print("current tile_index= ",tile_index);
 #print("tile name is ",tiling[tile_index].name);
 

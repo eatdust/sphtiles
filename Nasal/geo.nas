@@ -235,7 +235,7 @@ var Coord = {
 		    return me.distance_to(destA);
 
 		# AB is undertermined; a great circle should be defined with non-colinear vectors
-		if (destA._lat == -destB._lat and destA._lon == math.pi - destB._lon) {
+		if (destA._lat == -destB._lat and destA._lon == math.pi + destB._lon) {
 		    die("Great circles are defined with non-colinear vectors");
 		}
 
