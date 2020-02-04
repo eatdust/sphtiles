@@ -231,12 +231,8 @@ var Coord = {
 		destB._pupdate();
 
 		# AB is not a circle but a point
-		if (destA._lat == destB._lat and destA._lon == destB._lon)
+		if (destA._lat == destB._lat and destA._lon == destB._lon) {
 		    return me.distance_to(destA);
-
-		# AB is undertermined; a great circle should be defined with non-colinear vectors
-		if (destA._lat == -destB._lat and destA._lon == math.pi + destB._lon) {
-		    die("Great circles are defined with non-colinear vectors");
 		}
 
 		var ca1 = math.cos(destA._lon);
@@ -267,18 +263,23 @@ var Coord = {
 
 		var hs12 = a * a + cd1 * cd2 * o * o;
 		var hc12 = 1.0 - hs12;		
-		    
+
+
+		# AB is undertermined; a great circle should be defined with non-colinear vectors
+		if (hs12*hc12 == 0.0) {
+		    die("Great circles are defined with non-colinear vectors");
+		}
+
+		
 		return ERAD * math.abs( math.asin( 0.5 * sDsAB / math.sqrt( hs12 * hc12 ) ) );
 	},
 	# arc distance on an earth sphere to the horizon    
         horizon: func() {
 	        me._pupdate();
-		if (me._alt < 0.0)
-		{
+		if (me._alt < 0.0) {
 		    return 0.0;
 		}
-		else
-		{
+		else {
 		    return ERAD*math.acos(ERAD/(ERAD+me._alt));
 		}
 	},		
