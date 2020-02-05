@@ -553,7 +553,8 @@ if (action)
 	else if (i==3)
 		{
 		earth_model.node3 = place_earth_model("Models/Astro/earth_N3.xml",lat, lon, 0.0, 0.0, 0.0, 0.0);
-		cloudsphere_model.node3 = place_earth_model("Models/Astro/clouds_N3.xml",lat, lon, 0.0, 0.0, 0.0, 0.0);
+		if (cloudsphere_rotated_flag == 0)
+			{cloudsphere_model.node3 = place_earth_model("Models/Astro/clouds_N3.xml",lat, lon, 0.0, 0.0, 0.0, 0.0);}
 		}
 	else if (i==4)
 		{
