@@ -265,69 +265,81 @@ setprop("/earthview/longitude-deg", lon);
 setprop("/earthview/roll-deg", -(90-lat));
 setprop("/earthview/yaw-deg", -lon);
 
-var shuttle_pos = geo.aircraft_position();
 
-
-#horizon (in m) over the geo earth (for tests)
-var geohorizon = shuttle_pos.horizon();
-
-#fold back the distorsion induced by R2/ERAD != altitude2/altitude1 on
-#the geo sphere.
-var distorted_geohorizon = geo.ERAD*horizon/R1;
-
-# over which tile are we?
-var tile_index = math.floor((180.0+geo.normdeg180(shuttle_pos.lon()))/90.0);
-if (shuttle_pos.lat() < 0.0)
+if (getprop("/earthview/show-force-all") == 1)
 {
-    tile_index += 4;
+
+    tiling_visibility = {"N1":1,"N2":1,"N3":1,"N4":1,"S1":1,"S2":1,"S3":1,"S4":1};
+
 }
-
-
-#print("lon= lat= ",shuttle_pos.lon()," ",shuttle_pos.lat());
-#print("horizon= geohorizon= distorted_geohorizon= ",horizon/1000.0," ",geohorizon/1000.0," "
-#      ,distorted_geohorizon/1000.0);
-#print("current tile_index= ",tile_index);
-#print("tile name is ",tiling[tile_index].name);
-
-tiling_visibility[tiling[tile_index].name] = 1;
-
-# which neighbouring tiles are visible
-# loops over junctions, i.e. arcs and points
-for (var i=0; i < 3; i = i+1) {
-
-    var ia = tiling[tile_index].arcs.index[i][0];
-    var ib = tiling[tile_index].arcs.index[i][1];
-
-#    print("ti i= ",tile_index," ",i);
-#    print("ia= ib= ",ia," ",ib);
-#    print("line names= ",tiling[tile_index].arcs.names[i]);
-#    print("dist to arc= ",shuttle_pos.greatcircle_distance_to(geojunctions[ia],geojunctions[ib])/1000.0);
-
-    if (shuttle_pos.greatcircle_distance_to(geojunctions[ia],geojunctions[ib]) > distorted_geohorizon)
-    {
-	tiling_visibility[tiling[tile_index].arcs.names[i]] = 0;
-    }
-    else
-    {
-	tiling_visibility[tiling[tile_index].arcs.names[i]] = 1;
-    }
+else
+{
     
-    
-    var ic = tiling[tile_index].points.index[i];
+    var shuttle_pos = geo.aircraft_position();
 
-#    print("ic= ",ic);
-#    print("point names= ",tiling[tile_index].points.names[i]);
-#    print("distance to point= ",shuttle_pos.distance_to(geojunctions[ic])/1000.0);
-#    print(" ");
 
-    if (shuttle_pos.distance_to(geojunctions[ic]) > distorted_geohorizon)
+    #horizon (in m) over the geo earth (for tests)
+    var geohorizon = shuttle_pos.horizon();
+
+    #fold back the distorsion induced by R2/ERAD != altitude2/altitude1 on
+    #the geo sphere.
+    var distorted_geohorizon = geo.ERAD*horizon/R1;
+
+    # over which tile are we?
+    var tile_index = math.floor((180.0+geo.normdeg180(shuttle_pos.lon()))/90.0);
+    if (shuttle_pos.lat() < 0.0)
     {
-	tiling_visibility[tiling[tile_index].points.names[i]] = 0;
+	tile_index += 4;
     }
-    else
-    {
-	tiling_visibility[tiling[tile_index].points.names[i]] = 1;
+
+
+    #print("lon= lat= ",shuttle_pos.lon()," ",shuttle_pos.lat());
+    #print("horizon= geohorizon= distorted_geohorizon= ",horizon/1000.0," ",geohorizon/1000.0," "
+    #      ,distorted_geohorizon/1000.0);
+    #print("current tile_index= ",tile_index);
+    #print("tile name is ",tiling[tile_index].name);
+
+    tiling_visibility[tiling[tile_index].name] = 1;
+
+    # which neighbouring tiles are visible
+    # loops over junctions, i.e. arcs and points
+    for (var i=0; i < 3; i = i+1) {
+
+	var ia = tiling[tile_index].arcs.index[i][0];
+	var ib = tiling[tile_index].arcs.index[i][1];
+
+	#    print("ti i= ",tile_index," ",i);
+	#    print("ia= ib= ",ia," ",ib);
+	#    print("line names= ",tiling[tile_index].arcs.names[i]);
+	#    print("dist to arc= ",shuttle_pos.greatcircle_distance_to(geojunctions[ia],geojunctions[ib])/1000.0);
+
+	if (shuttle_pos.greatcircle_distance_to(geojunctions[ia],geojunctions[ib]) > distorted_geohorizon)
+	{
+	    tiling_visibility[tiling[tile_index].arcs.names[i]] = 0;
+	}
+	else
+	{
+	    tiling_visibility[tiling[tile_index].arcs.names[i]] = 1;
+	}
+	
+	
+	var ic = tiling[tile_index].points.index[i];
+
+	#    print("ic= ",ic);
+	#    print("point names= ",tiling[tile_index].points.names[i]);
+	#    print("distance to point= ",shuttle_pos.distance_to(geojunctions[ic])/1000.0);
+	#    print(" ");
+
+	if (shuttle_pos.distance_to(geojunctions[ic]) > distorted_geohorizon)
+	{
+	    tiling_visibility[tiling[tile_index].points.names[i]] = 0;
+	}
+	else
+	{
+	    tiling_visibility[tiling[tile_index].points.names[i]] = 1;
+	}
     }
+
 }
 
 
